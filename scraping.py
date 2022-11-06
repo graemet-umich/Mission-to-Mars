@@ -36,6 +36,7 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
+        "hemispheres": hemisphere_images(browser),
         "last_modified": dt.datetime.now()
     }
 
@@ -118,9 +119,7 @@ def hemisphere_images(browser):
         browser.back()
 
     # 4. Return the list that holds the dictionary of each image url and title.
-    hemisphere_image_urls
-
-
+    return hemisphere_image_urls
 
 
 # ## 10.3.4 Scrape Mars Data: Featured Image
