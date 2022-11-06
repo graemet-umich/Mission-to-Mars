@@ -1,0 +1,12 @@
+README for mongo 6.0 community edition on a Mac
+(see https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
+
+Remember to activate your proper environment:
+> conda activate PythonData
+
+To run MongoDB (i.e. the mongod process) as a macOS service, run:
+> brew services start mongodb-community@6.0
+
+To start mongo, do not use mongo. It is not included in the 6.0 release:
+> mongosh
+
