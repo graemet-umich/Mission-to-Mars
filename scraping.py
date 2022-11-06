@@ -74,6 +74,55 @@ def mars_news(browser):
     return news_title, news_p
 
 
+# Scrape High-Resolution Mars’ Hemisphere Images and Titles
+def hemisphere_images(browser):
+
+    # 1. Use browser to visit the URL 
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+
+    # 2. Create a list to hold the images and titles.
+    hemisphere_image_urls = []
+
+    # 3. Write code to retrieve the image urls and titles for each hemisphere.
+    # Use method suggested in challenge hint.
+
+    # Convert the browser html to a soup object
+    html = browser.html
+    imgs_soup = soup(html, 'html.parser')
+
+    # find all elements that contain links to hemisphere images
+    div_descriptions = imgs_soup.find_all('div', class_="description")
+
+    for div_description in div_descriptions:
+        # dictionary for image and image description
+        hemispheres = {}
+        
+        # click on hemisphere link
+        browser.find_by_text(div_description.a.h3.text).click()
+        
+        # Convert the browser html of images to a soup object
+        img_html = browser.html
+        img_url_soup = soup(img_html, 'html.parser')
+        
+        # navigate to the full-resolution image page
+        img_url_rel = img_url_soup.find('a', string="Sample").get('href')
+        title = img_url_soup.find("h2", class_="title").text
+        
+        # add items to dictionary
+        hemispheres["img_url"] = f"{url}{img_url_rel}"
+        hemispheres["title"] = title
+        
+        hemisphere_image_urls.append(hemispheres)
+        
+        browser.back()
+
+    # 4. Return the list that holds the dictionary of each image url and title.
+    hemisphere_image_urls
+
+
+
+
 # ## 10.3.4 Scrape Mars Data: Featured Image
 
 def featured_image(browser):
