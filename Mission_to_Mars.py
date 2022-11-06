@@ -1,5 +1,6 @@
 # 10.3.6 Export to Python
 # 10.5.2 Update the Code
+# 10.5.3 Integrate MongoDB Into the Web App
 
 # Import Splinter and BeautifulSoup
 from splinter import Browser
@@ -7,9 +8,41 @@ from bs4 import BeautifulSoup as soup
 from webdriver_manager.chrome import ChromeDriverManager
 
 import pandas as pd
+import datetime as dt
 
-executable_path = {'executable_path': ChromeDriverManager().install()}
-browser = Browser('chrome', **executable_path, headless=False)
+
+# Initialize the browser.
+# Create a data dictionary.
+# End the WebDriver and return the scraped data.
+def scrape_all():
+    # Initiate headless driver for deployment
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=True)
+
+    news_title, news_paragraph = mars_news(browser)
+
+    # Run all scraping functions and store results in dictionary.
+ 
+    # This dictionary does two things: It runs all of the functions 
+    # we've created
+    # —featured_image(browser), for example
+    # —and it also stores all of the results. 
+    # When we create the HTML template, we'll create paths to 
+    # the dictionary's values, which lets us present our data on our template. 
+    # We're also adding the date the code was run last 
+    # by adding "last_modified": dt.datetime.now().
+    data = {
+        "news_title": news_title,
+        "news_paragraph": news_paragraph,
+        "featured_image": featured_image(browser),
+        "facts": mars_facts(),
+        "last_modified": dt.datetime.now()
+    }
+
+    # Stop webdriver and return data
+    browser.quit()
+    return data
+
 
 def mars_news(browser):
         
@@ -88,7 +121,9 @@ def mars_facts():
     df.columns=['description', 'Mars', 'Earth']
     df.set_index('description', inplace=True)
 
-    return df.to_html()
+    # Convert dataframe into HTML format, add bootstrap
+    return df.to_html(classes="table table-striped")
 
-# shut down automated browser, because the scraping is done
-browser.quit()
+if __name__ == "__main__":
+    # If running as script, print scraped data
+    print(scrape_all())
